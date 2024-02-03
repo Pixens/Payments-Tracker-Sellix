@@ -56,17 +56,17 @@ async def on_ready():
 @bot.slash_command(guild_ids=[config["guild-id"]], name="check-balance", description="Check the current cashapp balance.")
 async def check_balance(ctx):
     if ctx.author.id not in config["whitelisted"]:
-        return await ctx.send("You are not whitelisted to use this command.")
+        return await ctx.respond("You are not whitelisted to use this command.", ephemeral=True)
 
     with open("balance.json", "r", encoding="utf-8") as file:
         balance = json.load(file)
 
-    return await ctx.send(f"The current balance is {balance['balance']}")
+    return await ctx.respond(f"The current balance is {balance['balance']}")
 
 @bot.slash_command(guild_ids=[config["guild-id"]], name="remove-balance", description="Remove balance from the cashapp balance.")
 async def remove_balance(ctx, amount: discord.Option(int, "The amount to remove from the balance.", required=False)):
     if ctx.author.id not in config["whitelisted"]:
-        return await ctx.send("You are not whitelisted to use this command.")
+        return await ctx.respond("You are not whitelisted to use this command.", ephemeral=True)
 
     if not amount:
         with open("balance.json", "r", encoding="utf-8") as file:
@@ -78,7 +78,7 @@ async def remove_balance(ctx, amount: discord.Option(int, "The amount to remove 
         with open("balance.json", "w", encoding="utf-8") as file:
             json.dump(balance, file, indent=4)
 
-        return await ctx.send(f"Removed {old_balance} from the balance.")
+        return await ctx.respond(f"Removed {old_balance} from the balance.")
     else:
         with open("balance.json", "r", encoding="utf-8") as file:
             balance = json.load(file)
@@ -87,19 +87,19 @@ async def remove_balance(ctx, amount: discord.Option(int, "The amount to remove 
         with open("balance.json", "w", encoding="utf-8") as file:
             json.dump(balance, file, indent=4)
 
-        return await ctx.send(f"Removed {amount} from the balance.")
+        return await ctx.respond(f"Removed {amount} from the balance.")
 
 
 @bot.slash_command(guild_ids=[config["guild-id"]], name="whitelist", description="Whitelist a user to use the commands.")
 async def whitelist(ctx, user: discord.User):
     if ctx.author.id not in config["whitelisted"]:
-        return await ctx.send("You are not whitelisted to use this command.")
+        return await ctx.respond("You are not whitelisted to use this command.", ephemeral=True)
 
     config["whitelisted"].append(user.id)
     with open("config.yml", "w", encoding="utf-8") as file:
         yaml.dump(config, file, indent=4)
 
-    return await ctx.send(f"Whitelisted {user.mention}")
+    return await ctx.respond(f"Whitelisted {user.mention}")
 
 
 Thread(target=FlaskServer().start).start()
