@@ -9,8 +9,8 @@ from datetime import datetime
 from flask import Flask, request, jsonify
 
 
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)
+# log = logging.getLogger('werkzeug')
+# log.setLevel(logging.ERROR)
 
 
 with open("config.yml", "r", encoding="utf-8") as f:
@@ -20,7 +20,7 @@ with open("config.yml", "r", encoding="utf-8") as f:
 class FlaskServer:
     def __init__(self):
         self.app = Flask("cashapp-payments")
-        self.app.route(rule="/cashapp", methods=["POST"], callback=FlaskServer.receive_cashapp_payments)
+        self.app.route("/cashapp", methods=["POST"])(self.receive_cashapp_payments)
 
     @staticmethod
     def receive_cashapp_payments():
