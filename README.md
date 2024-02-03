@@ -1,5 +1,5 @@
-# Cashapp Payments Tracker (Sellix)
+# Payments Tracker (Sellix)
 
-Tracks all cashapp payments using a webhook. 
+Tracks all cashapp & paypal payments using a webhook. 
 
-- Use `ngrok http 6969` to get the webhook URL.
+- Use `ngrok http 100` to get the webhook URL.

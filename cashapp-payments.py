@@ -19,8 +19,8 @@ with open("config.yml", "r", encoding="utf-8") as f:
 
 class FlaskServer:
     def __init__(self):
-        self.app = Flask("cashapp-payments")
-        self.app.route("/cashapp", methods=["POST"])(FlaskServer.receive_cashapp_payments)
+        self.app = Flask("payments")
+        self.app.route("/payments", methods=["POST"])(FlaskServer.receive_cashapp_payments)
 
     @staticmethod
     def receive_cashapp_payments():
@@ -29,13 +29,25 @@ class FlaskServer:
             with open("balance.json", "r", encoding="utf-8") as file:
                 balance = json.load(file)
 
-            balance["balance"] += data["data"]["total"]
+            balance["cashapp-balance"] += data["data"]["total"]
             with open("balance.json", "w", encoding="utf-8") as file:
                 json.dump(balance, file, indent=4)
 
             print(f"{datetime.now()} | Received cashapp payment of {data['data']['total']}")
             with open("log.log", "a", encoding="utf-8") as file:
                 file.write(f"{datetime.now()} | Received cashapp payment of {data['data']['total']}\n")
+
+        elif data["data"]["gateway"] == "PAYPAL":
+            with open("balance.json", "r", encoding="utf-8") as file:
+                balance = json.load(file)
+
+            balance["paypal-balance"] += data["data"]["total"]
+            with open("balance.json", "w", encoding="utf-8") as file:
+                json.dump(balance, file, indent=4)
+
+            print(f"{datetime.now()} | Received paypal payment of {data['data']['total']}")
+            with open("log.log", "a", encoding="utf-8") as file:
+                file.write(f"{datetime.now()} | Received paypal payment of {data['data']['total']}\n")
 
             return jsonify(
                 {
@@ -61,10 +73,14 @@ async def check_balance(ctx):
     with open("balance.json", "r", encoding="utf-8") as file:
         balance = json.load(file)
 
-    return await ctx.respond(f"The current balance is {balance['balance']}")
+    return await ctx.respond(f"The current cashapp balance is {balance['cashapp-balance']} & the current paypal balance is {balance['paypal-balance']}")
 
 @bot.slash_command(guild_ids=[config["guild-id"]], name="remove-balance", description="Remove balance from the cashapp balance.")
-async def remove_balance(ctx, amount: discord.Option(int, "The amount to remove from the balance.", required=False)):
+async def remove_balance(
+        ctx,
+        type: discord.Option(str, "The type of balance to remove.", choices=["cashapp", "paypal"], required=True),
+        amount: discord.Option(int, "The amount to remove from the balance.", required=False)
+):
     if ctx.author.id not in config["whitelisted"]:
         return await ctx.respond("You are not whitelisted to use this command.", ephemeral=True)
 
@@ -72,9 +88,9 @@ async def remove_balance(ctx, amount: discord.Option(int, "The amount to remove 
         with open("balance.json", "r", encoding="utf-8") as file:
             balance = json.load(file)
 
-        old_balance = balance["balance"]
+        old_balance = balance[f"{type}-balance"]
 
-        balance["balance"] = 0
+        balance[f"{type}-balance"] = 0
         with open("balance.json", "w", encoding="utf-8") as file:
             json.dump(balance, file, indent=4)
 
@@ -83,7 +99,7 @@ async def remove_balance(ctx, amount: discord.Option(int, "The amount to remove 
         with open("balance.json", "r", encoding="utf-8") as file:
             balance = json.load(file)
 
-        balance["balance"] -= amount
+        balance[f"{type}-balance"] -= amount
         with open("balance.json", "w", encoding="utf-8") as file:
             json.dump(balance, file, indent=4)
 
