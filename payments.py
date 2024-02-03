@@ -25,6 +25,7 @@ class FlaskServer:
     @staticmethod
     def receive_payments():
         data = request.json
+        print(data)
         if data["data"]["gateway"] == "CASH_APP":
             with open("balance.json", "r", encoding="utf-8") as file:
                 balance = json.load(file)
