@@ -20,10 +20,10 @@ with open("config.yml", "r", encoding="utf-8") as f:
 class FlaskServer:
     def __init__(self):
         self.app = Flask("payments")
-        self.app.route("/payments", methods=["POST"])(FlaskServer.receive_cashapp_payments)
+        self.app.route("/payments", methods=["POST"])(FlaskServer.receive_payments)
 
     @staticmethod
-    def receive_cashapp_payments():
+    def receive_payments():
         data = request.json
         if data["data"]["gateway"] == "CASH_APP":
             with open("balance.json", "r", encoding="utf-8") as file:
@@ -49,11 +49,11 @@ class FlaskServer:
             with open("log.log", "a", encoding="utf-8") as file:
                 file.write(f"{datetime.now()} | Received paypal payment of {data['data']['total']}\n")
 
-            return jsonify(
-                {
-                    "status": "received"
-                }
-            ), 200
+        return jsonify(
+            {
+                "status": "received"
+            }
+        ), 200
 
     def start(self):
         self.app.run(port=100)
