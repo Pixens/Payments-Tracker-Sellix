@@ -33,7 +33,7 @@ class FlaskServer:
             with open("balance.json", "w", encoding="utf-8") as file:
                 json.dump(balance, file, indent=4)
 
-            print(f"Received cashapp payment of {data['data']['total']}")
+            print(f"{datetime.now()} | Received cashapp payment of {data['data']['total']}")
             with open("log.log", "a", encoding="utf-8") as file:
                 file.write(f"{datetime.now()} | Received cashapp payment of {data['data']['total']}\n")
 
