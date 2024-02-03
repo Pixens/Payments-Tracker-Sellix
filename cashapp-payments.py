@@ -20,7 +20,7 @@ with open("config.yml", "r", encoding="utf-8") as f:
 class FlaskServer:
     def __init__(self):
         self.app = Flask("cashapp-payments")
-        self.app.route("/cashapp", methods=["POST"])(self.receive_cashapp_payments)
+        self.app.route("/cashapp", methods=["POST"])(FlaskServer.receive_cashapp_payments)
 
     @staticmethod
     def receive_cashapp_payments():
