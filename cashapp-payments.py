@@ -44,7 +44,7 @@ class FlaskServer:
             ), 200
 
     def start(self):
-        self.app.run(port=6969)
+        self.app.run(port=100)
 
 
 bot = discord.Bot(status=discord.Status.online)
