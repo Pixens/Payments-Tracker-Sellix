@@ -9,8 +9,8 @@ from datetime import datetime
 from flask import Flask, request, jsonify
 
 
-# log = logging.getLogger('werkzeug')
-# log.setLevel(logging.ERROR)
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
 
 with open("config.yml", "r", encoding="utf-8") as f:
