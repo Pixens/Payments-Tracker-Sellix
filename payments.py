@@ -79,7 +79,7 @@ async def check_balance(ctx):
 async def remove_balance(
         ctx,
         type: discord.Option(str, "The type of balance to remove.", choices=["cashapp", "paypal"], required=True),
-        amount: discord.Option(int, "The amount to remove from the balance.", required=False)
+        amount: discord.Option(float, "The amount to remove from the balance.", required=False)
 ):
     if ctx.author.id not in config["whitelisted"]:
         return await ctx.respond("You are not whitelisted to use this command.", ephemeral=True)
