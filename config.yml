@@ -2,3 +2,9 @@ bot-token: ""
 guild-id: 0
 whitelisted:
   - 0
+  
+paypal-fees: 0.10
+# 10% = 0.10, 20% = 0.20, etc.
+
+cashapp-fees: 0.05
+# 10% = 0.10, 20% = 0.20, etc.
