@@ -35,9 +35,9 @@ class FlaskServer:
             with open("balance.json", "w", encoding="utf-8") as file:
                 json.dump(balance, file, indent=4)
 
-            print(f"{datetime.now()} | Received cashapp payment of {data['data']['total']}")
+            print(f"{datetime.now()} | Received cashapp payment of {data['data']['total']}. Added {balance_to_add} to the balance.")
             with open("log.log", "a", encoding="utf-8") as file:
-                file.write(f"{datetime.now()} | Received cashapp payment of {data['data']['total']}\n")
+                file.write(f"{datetime.now()} | Received cashapp payment of {data['data']['total']}. Added {balance_to_add} to the balance.\n")
 
         elif data["data"]["gateway"] == "PAYPAL":
             with open("balance.json", "r", encoding="utf-8") as file:
@@ -49,9 +49,9 @@ class FlaskServer:
             with open("balance.json", "w", encoding="utf-8") as file:
                 json.dump(balance, file, indent=4)
 
-            print(f"{datetime.now()} | Received paypal payment of {data['data']['total']}")
+            print(f"{datetime.now()} | Received paypal payment of {data['data']['total']}. Added {balance_to_add} to the balance.")
             with open("log.log", "a", encoding="utf-8") as file:
-                file.write(f"{datetime.now()} | Received paypal payment of {data['data']['total']}\n")
+                file.write(f"{datetime.now()} | Received paypal payment of {data['data']['total']}. Added {balance_to_add} to the balance.\n")
 
         return jsonify(
             {
