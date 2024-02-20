@@ -29,7 +29,9 @@ class FlaskServer:
             with open("balance.json", "r", encoding="utf-8") as file:
                 balance = json.load(file)
 
-            balance["cashapp-balance"] += data["data"]["total"]
+            balance_to_add = data["data"]["total"] * (1-config["cashapp-fees"])
+
+            balance["cashapp-balance"] += balance_to_add
             with open("balance.json", "w", encoding="utf-8") as file:
                 json.dump(balance, file, indent=4)
 
@@ -41,7 +43,9 @@ class FlaskServer:
             with open("balance.json", "r", encoding="utf-8") as file:
                 balance = json.load(file)
 
-            balance["paypal-balance"] += data["data"]["total"]
+            balance_to_add = (data["data"]["total"] - data["data"]["paypal_fee"]) * (1-config["paypal-fees"])
+
+            balance["paypal-balance"] += balance_to_add
             with open("balance.json", "w", encoding="utf-8") as file:
                 json.dump(balance, file, indent=4)
 
