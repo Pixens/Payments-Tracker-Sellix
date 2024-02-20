@@ -106,6 +106,29 @@ async def remove_balance(
         return await ctx.respond(f"Removed {amount} from the balance.")
 
 
+@bot.slash_command(
+    guild_ids=[config["guild-id"]],
+    name="add-balance",
+    description="Add balance to any type of balance."
+)
+async def add_balance(
+        ctx,
+        type: discord.Option(str, "The type of balance to add.", choices=["cashapp", "paypal"], required=True),
+        amount: discord.Option(float, "The amount to add to the balance.", required=True)
+):
+    if ctx.author.id not in config["whitelisted"]:
+        return await ctx.respond("You are not whitelisted to use this command.", ephemeral=True)
+
+    with open("balance.json", "r", encoding="utf-8") as file:
+        balance = json.load(file)
+
+    balance[f"{type}-balance"] += amount
+    with open("balance.json", "w", encoding="utf-8") as file:
+        json.dump(balance, file, indent=4)
+
+    return await ctx.respond(f"Added {amount} to the balance.")
+
+
 @bot.slash_command(guild_ids=[config["guild-id"]], name="whitelist", description="Whitelist a user to use the commands.")
 async def whitelist(ctx, user: discord.User):
     if ctx.author.id not in config["whitelisted"]:
